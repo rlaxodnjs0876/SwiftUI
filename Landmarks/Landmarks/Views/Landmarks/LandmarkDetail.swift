@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct LandmarkDetail: View {
+    @EnvironmentObject var modelData: ModelData
+    
     var landmark: Landmark
+    
+    var landmarkIndex: Int{
+        modelData.landmarks.firstIndex()
+    }
 
     var body: some View {
         // 사용자가 스크롤 가능하도록 ScrollView로 변경
@@ -50,6 +56,6 @@ struct LandmarkDetail: View {
 
 struct LandmarkDetail_Previews: PreviewProvider {
     static var previews: some View {
-        LandmarkDetail(landmark: landmarks[0])
+        LandmarkDetail(landmark: ModelData().landmarks[0])
     }
 }
