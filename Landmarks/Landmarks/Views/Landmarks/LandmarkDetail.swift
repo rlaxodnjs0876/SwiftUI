@@ -13,7 +13,7 @@ struct LandmarkDetail: View {
     var landmark: Landmark
     
     var landmarkIndex: Int{
-        modelData.landmarks.firstIndex()
+        modelData.landmarks.firstIndex(where: { $0.id == landmark.id})!
     }
 
     var body: some View {
@@ -29,9 +29,12 @@ struct LandmarkDetail: View {
                 .padding(.bottom, -130)
 
             VStack(alignment: .leading) {
-                Text(landmark.name)
-                    .font(.title)
-                    .foregroundColor(.primary)
+                HStack{
+                    Text(landmark.name)
+                        .font(.title)
+                    
+                    FavoriteButton(isSet: $modelData.landmarks[landmarkIndex].isFavorite)
+                }
 
                 HStack {
                     Text(landmark.park)
