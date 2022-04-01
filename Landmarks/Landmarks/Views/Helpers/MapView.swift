@@ -10,21 +10,36 @@ import MapKit
 
 struct MapView: View {
     var coordinate: CLLocationCoordinate2D
-    @State private var region = MKCoordinateRegion()
-
-    var body: some View {
-        Map(coordinateRegion: $region)
-            .onAppear {
-                // 뷰가 보일때 setRegion 메서드 실행
-                setRegion(coordinate)
-            }
+    
+    @AppStorage("MapView.zoom")
+    private var zoom: Zoom = .medium
+    
+    enum Zoom: String, CaseIterable, Identifiable {
+        case near = "Near"
+        case medium = "Medium"
+        case far = "Far"
+        
+        var id: Zoom {
+            return self
+        }
     }
     
-    // mapView를 해당 좌표로 업데이트 하기 위한 메서드, 외부에서 접근할 일 없기때문에 private
-    private func setRegion(_ coordinate: CLLocationCoordinate2D) {
-        region = MKCoordinateRegion(
+    var delta: CLLocationDegrees {
+        switch zoom {
+        case .near: return 0.02
+        case .medium: return 0.2
+        case .far: return 2
+        }
+    }
+    
+    var body: some View {
+        Map(coordinateRegion: .constant(region))
+    }
+    
+    var region: MKCoordinateRegion {
+        MKCoordinateRegion(
             center: coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2)
+            span: MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta)
         )
     }
 }
